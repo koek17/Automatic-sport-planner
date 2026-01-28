@@ -1,4 +1,4 @@
-#
+# 
 import streamlit as st
 import pandas as pd
 import requests
@@ -18,10 +18,11 @@ CITY_PRESETS = {
     "Amsterdam": (52.3676, 4.9041),
     "Den Haag": (52.0833, 4.3000),
     "Ede": (52.249375, 5.616126),
-    "custom": (None,None),
+    "custom": (None, None),
 }
 
-#helpers
+# helpers
+
 
 def parse_hhmm(s: str):
     s = (s or "").strip()
@@ -33,12 +34,14 @@ def parse_hhmm(s: str):
     except Exception:
         return None
 
+
 def minutes_between(t1: time, t2: time) -> int:
     dt1 = datetime.combine(date.today(), t1)
     dt2 = datetime.combine(date.today(), t2)
     if dt2 <= dt1:
         return 0
     return int((dt2 - dt1).total_seconds() // 60)
+
 
 def clamp_interval(start: time, end: time, window_start: time, window_end: time):
     if not start or not end:
@@ -55,6 +58,7 @@ def clamp_interval(start: time, end: time, window_start: time, window_end: time)
         return None
     return (a2.time(), b2.time())
 
+
 def free_minutes_for_day(blocks, day_window):
     """blocks: list of dicts {name, start, end}"""
     window_start, window_end = day_window
@@ -62,7 +66,9 @@ def free_minutes_for_day(blocks, day_window):
 
     intervals = []
     for blk in blocks:
-        clamped = clamp_interval(blk.get("start"), blk.get("end"), window_start, window_end)
+        clamped = clamp_interval(
+            blk.get("start"), blk.get("end"), window_start, window_end
+        )
         if clamped:
             intervals.append(clamped)
 
@@ -73,14 +79,19 @@ def free_minutes_for_day(blocks, day_window):
             merged.append([s, e])
         else:
             last_s, last_e = merged[-1]
-            if datetime.combine(date.today(), s) <= datetime.combine(date.today(), last_e):
-                if datetime.combine(date.today(), e) > datetime.combine(date.today(), last_e):
+            if datetime.combine(date.today(), s) <= datetime.combine(
+                date.today(), last_e
+            ):
+                if datetime.combine(date.today(), e) > datetime.combine(
+                    date.today(), last_e
+                ):
                     merged[-1][1] = e
             else:
                 merged.append([s, e])
 
     busy = sum(minutes_between(s, e) for s, e in merged)
     return max(total - busy, 0), merged
+
 
 def get_daily_max_temps(lat: float, lon: float, start: date, days: int, tz="Europe/Amsterdam"):
     end = start + timedelta(days=days - 1)
@@ -96,7 +107,11 @@ def get_daily_max_temps(lat: float, lon: float, start: date, days: int, tz="Euro
     r = requests.get(url, params=params, timeout=20)
     r.raise_for_status()
     data = r.json()
-    return {data["daily"]["time"][i]: float(data["daily"]["temperature_2m_max"][i]) for i in range(len(data["daily"]["time"]))}
+    return {
+        data["daily"]["time"][i]: float(data["daily"]["temperature_2m_max"][i])
+        for i in range(len(data["daily"]["time"]))
+    }
+
 
 # ---------- Planning logic ----------
 def session_priority(row):
@@ -118,6 +133,7 @@ def session_priority(row):
         type_bonus = 150
 
     return base + type_bonus
+
 
 def pick_best_day_for_session(days_df, used_days, session, temp_threshold):
     """
@@ -152,6 +168,7 @@ def pick_best_day_for_session(days_df, used_days, session, temp_threshold):
             best_idx = idx
 
     return best_idx
+
 
 def build_plan(days_df, fondo_df, temp_threshold, gym_min, chestback_min, gym_sessions=4, rest_choice="Auto (drukste dag)"):
     """
@@ -196,11 +213,11 @@ def build_plan(days_df, fondo_df, temp_threshold, gym_min, chestback_min, gym_se
             out.at[idx, "free_min"] -= int(chestback_min)
             out.at[idx, "notes"] += "Chest/Back toegevoegd omdat er tijd is. "
 
-        # -----------------------------
-        # Gym planning
-        # -----------------------------
+    # -----------------------------
+    # Gym planning
+    # -----------------------------
 
-        # hoeveel fietsdagen zijn er echt geplaatst?
+    # hoeveel fietsdagen zijn er echt geplaatst?
     placed_bike_count = out["plan_items"].apply(lambda lst: any(item.startswith("🚴") for item in lst)).sum()
 
     # Als er NIET gefietst wordt (te koud / geen geschikte dagen):
@@ -216,17 +233,25 @@ def build_plan(days_df, fondo_df, temp_threshold, gym_min, chestback_min, gym_se
             "Pull 2",
         ]
 
-    if rest_choice == "Auto (drukste dag)":
+        # choose rest day
+        if rest_choice == "Auto (drukste dag)":
             rest_idx = out["free_min"].idxmin()
-    else:
-            day_to_idx = { "Maandag": 0, "Dinsdag": 1, "Woensdag": 2, "Donderdag": 3, "Vrijdag": 4, "Zaterdag": 5, "Zondag": 6}
-            wanted = day_to_idx[rest_choice]
-            rest_idx = out.index[out["weekday_idx"] == wanted ][0]
+        else:
+            day_to_idx = {
+                "Maandag": 0,
+                "Dinsdag": 1,
+                "Woensdag": 2,
+                "Donderdag": 3,
+                "Vrijdag": 4,
+                "Zaterdag": 5,
+                "Zondag": 6,
+            }
+            wanted = day_to_idx.get(rest_choice, 0)
+            rest_idx = out.index[out["weekday_idx"] == wanted][0]
 
         # mark the rest day and note
         out.at[rest_idx, "plan_items"] = out.at[rest_idx, "plan_items"] + ["🛌 Rustdag"]
         out.at[rest_idx, "notes"] += "Geen fietsen (temp < drempel) → gymschema herhaalt met 1 rustdag. "
-
     else:
         # normaal gedrag: gym_sessions (bijv 4) zoals jij instelt
         gym_sessions_effective = gym_sessions
@@ -272,6 +297,8 @@ def build_plan(days_df, fondo_df, temp_threshold, gym_min, chestback_min, gym_se
         placed += 1
 
     return out
+
+
 # ---------- UI ----------
 st.set_page_config(page_title="Werk/Studie + FONDO + Gym Planner", layout="wide")
 st.title("Weekplanner: Automatisch schema")
@@ -306,8 +333,7 @@ with st.sidebar:
     chestback_min = st.number_input("Chest/Back extra op fietsdag (min)", min_value=20, max_value=120, value=80, step=5)
     gym_sessions = st.number_input("Aantal gym sessies per week", min_value=1, max_value=7, value=4, step=1)
 
-REST_OPTIONS = ["Auto (drukste dag)", "Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag",
-                        "Zondag"]
+    REST_OPTIONS = ["Auto (drukste dag)", "Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag", "Zondag"]
     rest_choice = st.selectbox("Rustdag", REST_OPTIONS, index=0)
 
 st.subheader("1) Vul je werk/studie in (wisselende week)")
@@ -402,7 +428,6 @@ if st.button("Maak weekplan"):
         days_df2["temp_max"] = days_df2["date"].astype(str).map(temps)
 
         planned = build_plan(
-
             days_df=days_df2,
             fondo_df=fondo_df,
             temp_threshold=temp_threshold,
