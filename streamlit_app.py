@@ -228,7 +228,7 @@ def build_plan(days_df, fondo_df, temp_threshold, gym_min, chestback_min, gym_se
 out.at[rest_idx, "plan_items"] = out.at[rest_idx, "plan_items"] + ["🛌 Rustdag"]
 out.at[rest_idx, "notes"] += "Geen fietsen (temp < drempel) → gymschema herhaalt met 1 rustdag. Rustdag gekozen op minst vrije tijd. "
 
-else:
+    else:
         # normaal gedrag: gym_sessions (bijv 4) zoals jij instelt
       gym_sessions_effective = gym_sessions
       gym_split = ["Legs 1", "Push (chest/shoulders/tris)", "Legs 2", "Pull (back/bis)"]
