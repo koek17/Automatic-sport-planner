@@ -4,6 +4,14 @@ import pandas as pd
 import requests
 from datetime import datetime, date, time, timedelta
 
+st.markdown("""
+<style>
+/* Maak alle widgets even strak */
+div[data-testid="stVerticalBlock"] > div { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+div[data-testid="stSelectbox"], div[data-testid="stTextInput"] { margin-top: 0.25rem; margin-bottom: 0.25rem; }
+</style>
+""", unsafe_allow_html=True)
+
 DAYS_NL = ["Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag", "Zondag"]
 SHIFT_PRESETS = {
     "Geen werk ": ("", ""),
