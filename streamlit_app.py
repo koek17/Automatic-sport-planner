@@ -20,9 +20,6 @@ CITY_PRESETS = {
     "Ede": (52.249375, 5.616126),
     "custom": (None,None),
 }
-REST_OPTIONS = ["Auto (drukste dag)", "Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag",
-                        "Zondag"]
-    rest_choice = st.selectbox("Rustdag", REST_OPTIONS, index=0)
 
 #helpers
 
