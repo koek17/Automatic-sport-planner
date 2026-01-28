@@ -301,15 +301,15 @@ lon = st.session_state["lon"]
 week_start = st.date_input("Week start (maandag)", value=date.today() - timedelta(days=date.today().weekday()))
 temp_threshold = st.slider("Minimum temperatuur voor fietsen (°C)", 0.0, 25.0, 10.0, 0.5)
 
- st.header("Dag-venster (vrije tijd)")
-    day_start = st.text_input("Dag start (HH:MM)", value="07:00")
-    day_end = st.text_input("Dag eind (HH:MM)", value="23:00")
-    day_window = (parse_hhmm(day_start) or time(7, 0), parse_hhmm(day_end) or time(23, 0))
+st.header("Dag-venster (vrije tijd)")
+day_start = st.text_input("Dag start (HH:MM)", value="07:00")
+day_end = st.text_input("Dag eind (HH:MM)", value="23:00")
+day_window = (parse_hhmm(day_start) or time(7, 0), parse_hhmm(day_end) or time(23, 0))
 
- st.header("Trainingstijden")
-    gym_min = st.number_input("Gym sessie duur (min)", min_value=30, max_value=180, value=60, step=5)
-    chestback_min = st.number_input("Chest/Back extra op fietsdag (min)", min_value=20, max_value=120, value=45, step=5)
-    gym_sessions = st.number_input("Aantal gym sessies per week", min_value=1, max_value=7, value=4, step=1)
+st.header("Trainingstijden")
+gym_min = st.number_input("Gym sessie duur (min)", min_value=30, max_value=180, value=60, step=5)
+chestback_min = st.number_input("Chest/Back extra op fietsdag (min)", min_value=20, max_value=120, value=45, step=5)
+gym_sessions = st.number_input("Aantal gym sessies per week", min_value=1, max_value=7, value=4, step=1)
 
 st.subheader("1) Vul je werk/studie in (wisselende week)")
 
