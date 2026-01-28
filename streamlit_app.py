@@ -306,7 +306,7 @@ st.title("Weekplanner: Automatisch schema")
 with st.sidebar:
     st.header("Benodigde informatie")
 
-    city = st.selectbox("Stad", list(CITY_PRESETS.keys()), key="city")
+    city = st.selectbox("Locatie", list(CITY_PRESETS.keys()), key="city")
     preset_lat, preset_lon = CITY_PRESETS[city]
 
     # Zorg dat session_state keys bestaan
@@ -322,7 +322,10 @@ with st.sidebar:
 
     week_start = st.date_input("Week start (maandag)", value=date.today() - timedelta(days=date.today().weekday()))
     temp_threshold = st.slider("Minimum temperatuur voor fietsen (°C)", 0.0, 25.0, 10.0, 0.5)
-
+    
+    REST_OPTIONS = ["Auto (drukste dag)", "Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag", "Zondag"]
+    rest_choice = st.selectbox("Rustdag", REST_OPTIONS, index=0)
+    
     st.header("Dag-venster (vrije tijd)")
     day_start = st.text_input("Dag start (HH:MM)", value="07:00")
     day_end = st.text_input("Dag eind (HH:MM)", value="23:00")
@@ -333,8 +336,7 @@ with st.sidebar:
     chestback_min = st.number_input("Chest/Back extra op fietsdag (min)", min_value=20, max_value=120, value=80, step=5)
     gym_sessions = st.number_input("Aantal gym sessies per week", min_value=1, max_value=7, value=4, step=1)
 
-    REST_OPTIONS = ["Auto (drukste dag)", "Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag", "Zondag"]
-    rest_choice = st.selectbox("Rustdag", REST_OPTIONS, index=0)
+    
 
 st.subheader("1) Vul je werk/studie in (wisselende week)")
 
