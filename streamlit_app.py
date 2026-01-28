@@ -1,4 +1,4 @@
-
+#
 import streamlit as st
 import pandas as pd
 import requests
@@ -219,10 +219,10 @@ def build_plan(days_df, fondo_df, temp_threshold, gym_min, chestback_min, gym_se
                         "Zondag"]
     rest_choice = st.selectbox("Rustdag", REST_OPTIONS, index=0)
 
-        if rest_choice == "Auto (drukste dag)":
+    if rest_choice == "Auto (drukste dag)":
             rest_idx = out["free_min"].idxmin()
 
-        else:
+    else:
             day_to_idx = {"Maandag": 0, "Dinsdag": 1, "Woensdag": 2, "Donderdag": 3, "Vrijdag": 4, "Zaterdag": 5, "Zondag": 6}
             wanted = day_to_idx[rest_choice]
             rest_idx= out.index[out["weekday_idx"] == wanted ][0]
