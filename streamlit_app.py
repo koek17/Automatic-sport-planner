@@ -226,8 +226,8 @@ else:
     day_to_idx = {
         "Maandag": 0, "Dinsdag": 1, "Woensdag": 2, "Donderdag": 3, "Vrijdag": 4, "Zaterdag": 5, "Zondag": 6
         }
-        wanted = day_to_idx[rest_choice]
-        rest_idx= out.index[out["weekday_idx"] == wanted ][0]
+    wanted = day_to_idx[rest_choice]
+    rest_idx= out.index[out["weekday_idx"] == wanted ][0]
 
 
     out.at[rest_idx, "plan_items"] = out.at[rest_idx, "plan_items"] + ["🛌 Rustdag"]
