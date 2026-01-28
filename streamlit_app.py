@@ -225,15 +225,15 @@ def build_plan(days_df, fondo_df, temp_threshold, gym_min, chestback_min, gym_se
             rest_idx= out.index[out["weekday_idx"] == wanted ][0]
 
 
-out.at[rest_idx, "plan_items"] = out.at[rest_idx, "plan_items"] + ["🛌 Rustdag"]
-out.at[rest_idx, "notes"] += "Geen fietsen (temp < drempel) → gymschema herhaalt met 1 rustdag. Rustdag gekozen op minst vrije tijd. "
+     out.at[rest_idx, "plan_items"] = out.at[rest_idx, "plan_items"] + ["🛌 Rustdag"]
+    out.at[rest_idx, "notes"] += "Geen fietsen (temp < drempel) → gymschema herhaalt met 1 rustdag. "
 
-    else:
-        # normaal gedrag: gym_sessions (bijv 4) zoals jij instelt
-      gym_sessions_effective = gym_sessions
-      gym_split = ["Legs 1", "Push (chest/shoulders/tris)", "Legs 2", "Pull (back/bis)"]
-      gym_split = gym_split[:gym_sessions_effective]
-      rest_idx = None
+else:
+    # normaal gedrag: gym_sessions (bijv 4) zoals jij instelt
+    gym_sessions_effective = gym_sessions
+    gym_split = ["Legs 1", "Push (chest/shoulders/tris)", "Legs 2", "Pull (back/bis)"]
+    gym_split = gym_split[:gym_sessions_effective]
+    rest_idx = None
 
     # candidate days: genoeg tijd, en NIET de rustdag
     candidates = out.copy()
