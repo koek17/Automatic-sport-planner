@@ -153,7 +153,7 @@ def pick_best_day_for_session(days_df, used_days, session, temp_threshold):
 
     return best_idx
 
-def build_plan(days_df, fondo_df, temp_threshold, gym_min, chestback_min, gym_sessions=4):
+def build_plan(days_df, fondo_df, temp_threshold, gym_min, chestback_min, gym_sessions=4, rest_choice):
     """
     Returns days_df with columns:
     - plan_items (list)
