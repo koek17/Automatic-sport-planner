@@ -282,7 +282,7 @@ st.set_page_config(page_title="Werk/Studie + FONDO + Gym Planner", layout="wide"
 st.title("Weekplanner: Automatisch schema")
 
 with st.sidebar:
-    st.header("Locatie")
+    st.header("Benodigde informatie")
 
     city = st.selectbox("Stad", list(CITY_PRESETS.keys()), key="city")
     preset_lat, preset_lon = CITY_PRESETS[city]
@@ -295,24 +295,21 @@ with st.sidebar:
         st.session_state["lat"] = preset_lat
         st.session_state["lon"] = preset_lon
 
-lat = st.session_state["lat"]
-lon = st.session_state["lon"]
+    lat = st.session_state["lat"]
+    lon = st.session_state["lon"]
 
-with st.sidebar:
-    st.header("Benodigde informatie")
+    week_start = st.date_input("Week start (maandag)", value=date.today() - timedelta(days=date.today().weekday()))
+    temp_threshold = st.slider("Minimum temperatuur voor fietsen (°C)", 0.0, 25.0, 10.0, 0.5)
 
-week_start = st.date_input("Week start (maandag)", value=date.today() - timedelta(days=date.today().weekday()))
-temp_threshold = st.slider("Minimum temperatuur voor fietsen (°C)", 0.0, 25.0, 10.0, 0.5)
+    st.header("Dag-venster (vrije tijd)")
+    day_start = st.text_input("Dag start (HH:MM)", value="07:00")
+    day_end = st.text_input("Dag eind (HH:MM)", value="23:00")
+    day_window = (parse_hhmm(day_start) or time(7, 0), parse_hhmm(day_end) or time(23, 0))
 
-st.header("Dag-venster (vrije tijd)")
-day_start = st.text_input("Dag start (HH:MM)", value="07:00")
-day_end = st.text_input("Dag eind (HH:MM)", value="23:00")
-day_window = (parse_hhmm(day_start) or time(7, 0), parse_hhmm(day_end) or time(23, 0))
-
-st.header("Trainingstijden")
-gym_min = st.number_input("Gym sessie duur (min)", min_value=30, max_value=180, value=60, step=5)
-chestback_min = st.number_input("Chest/Back extra op fietsdag (min)", min_value=20, max_value=120, value=45, step=5)
-gym_sessions = st.number_input("Aantal gym sessies per week", min_value=1, max_value=7, value=4, step=1)
+    st.header("Trainingstijden")
+    gym_min = st.number_input("Gym sessie duur (min)", min_value=30, max_value=180, value=60, step=5)
+    chestback_min = st.number_input("Chest/Back extra op fietsdag (min)", min_value=20, max_value=120, value=45, step=5)
+    gym_sessions = st.number_input("Aantal gym sessies per week", min_value=1, max_value=7, value=4, step=1)
 
 st.subheader("1) Vul je werk/studie in (wisselende week)")
 
