@@ -216,24 +216,23 @@ def build_plan(days_df, fondo_df, temp_threshold, gym_min, chestback_min, gym_se
             "Pull 2",
         ]
 
-        if rest_choice == "Auto (drukste dag)":
+          if rest_choice == "Auto (drukste dag)":
             rest_idx = out["free_min"].idxmin()
-
         else:
             day_to_idx = { "Maandag": 0, "Dinsdag": 1, "Woensdag": 2, "Donderdag": 3, "Vrijdag": 4, "Zaterdag": 5, "Zondag": 6}
             wanted = day_to_idx[rest_choice]
-            rest_idx= out.index[out["weekday_idx"] == wanted ][0]
+            rest_idx = out.index[out["weekday_idx"] == wanted ][0]
 
+        # mark the rest day and note
+        out.at[rest_idx, "plan_items"] = out.at[rest_idx, "plan_items"] + ["🛌 Rustdag"]
+        out.at[rest_idx, "notes"] += "Geen fietsen (temp < drempel) → gymschema herhaalt met 1 rustdag. "
 
-            out.at[rest_idx, "plan_items"] = out.at[rest_idx, "plan_items"] + ["🛌 Rustdag"]
-            out.at[rest_idx, "notes"] += "Geen fietsen (temp < drempel) → gymschema herhaalt met 1 rustdag. "
-
-        else:
-    # normaal gedrag: gym_sessions (bijv 4) zoals jij instelt
-    gym_sessions_effective = gym_sessions
-    gym_split = ["Legs 1", "Push (chest/shoulders/tris)", "Legs 2", "Pull (back/bis)"]
-    gym_split = gym_split[:gym_sessions_effective]
-    rest_idx = None
+    else:
+        # normaal gedrag: gym_sessions (bijv 4) zoals jij instelt
+        gym_sessions_effective = gym_sessions
+        gym_split = ["Legs 1", "Push (chest/shoulders/tris)", "Legs 2", "Pull (back/bis)"]
+        gym_split = gym_split[:gym_sessions_effective]
+        rest_idx = None
 
     # candidate days: genoeg tijd, en NIET de rustdag
     candidates = out.copy()
@@ -261,19 +260,18 @@ def build_plan(days_df, fondo_df, temp_threshold, gym_min, chestback_min, gym_se
 
         label = gym_split[placed]
         if avoid_legs and "Legs" in label:
-            # swap met non-legs als mogelijk
+            # swap with non-legs if possible
             for j in range(placed, len(gym_split)):
                 if "Legs" not in gym_split[j]:
                     label = gym_split[j]
                     gym_split[j], gym_split[placed] = gym_split[placed], gym_split[j]
                     break
 
-        out.at[zidx, "plan_items"] = out.at[idx, "plan_items"] + [f"{label} ({gym_min} min)"]
+        out.at[idx, "plan_items"] = out.at[idx, "plan_items"] + [f"{label} ({gym_min} min)"]
         out.at[idx, "free_min"] -= int(gym_min)
         placed += 1
 
     return out
-
 # ---------- UI ----------
 st.set_page_config(page_title="Werk/Studie + FONDO + Gym Planner", layout="wide")
 st.title("Weekplanner: Automatisch schema")
