@@ -298,8 +298,8 @@ with st.sidebar:
 lat = st.session_state["lat"]
 lon = st.session_state["lon"]
 
-    week_start = st.date_input("Week start (maandag)", value=date.today() - timedelta(days=date.today().weekday()))
-    temp_threshold = st.slider("Minimum temperatuur voor fietsen (°C)", 0.0, 25.0, 10.0, 0.5)
+week_start = st.date_input("Week start (maandag)", value=date.today() - timedelta(days=date.today().weekday()))
+temp_threshold = st.slider("Minimum temperatuur voor fietsen (°C)", 0.0, 25.0, 10.0, 0.5)
 
     st.header("Dag-venster (vrije tijd)")
     day_start = st.text_input("Dag start (HH:MM)", value="07:00")
