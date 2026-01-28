@@ -321,10 +321,11 @@ with st.sidebar:
     lon = st.session_state["lon"]
 
     week_start = st.date_input("Week start (maandag)", value=date.today() - timedelta(days=date.today().weekday()))
-    temp_threshold = st.slider("Minimum temperatuur voor fietsen (°C)", 0.0, 25.0, 10.0, 0.5)
     
     REST_OPTIONS = ["Auto (drukste dag)", "Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag", "Zondag"]
     rest_choice = st.selectbox("Rustdag", REST_OPTIONS, index=0)
+   
+    temp_threshold = st.slider("Minimum temperatuur voor fietsen (°C)", 0.0, 25.0, 10.0, 0.5)
     
     st.header("Dag-venster (vrije tijd)")
     day_start = st.text_input("Dag start (HH:MM)", value="07:00")
@@ -346,7 +347,8 @@ rows = []
 for idx in range(7):
     d = week_start + timedelta(days=idx)
     with cols[idx]:
-        st.markdown(f"### {DAYS_NL[idx]}\n{d.isoformat()}")
+        st.markdown(f"### {DAYS_NL[idx]}")
+        st.caption(d.isoformat())
 
         # ---- Werkdienst dropdown ----
         shift_label = st.selectbox(
