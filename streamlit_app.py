@@ -355,7 +355,7 @@ rows = []
 for idx in range(7):
     d = week_start + timedelta(days=idx)
     with cols[idx]:
-        st.markdown(f"### {DAYS_NL[idx]}")
+        st.markdown(f"#### {DAYS_NL[idx]}")
         st.caption(d.isoformat())
 
         # ---- Werkdienst dropdown ----
