@@ -271,7 +271,7 @@ def build_plan(days_df, fondo_df, temp_threshold, gym_min, chestback_min, gym_se
                     gym_split[j], gym_split[placed] = gym_split[placed], gym_split[j]
                     break
 
-        out.at[idx, "plan_items"] = out.at[idx, "plan_items"] + [f"{label} ({gym_min} min)"]
+        out.at[zidx, "plan_items"] = out.at[idx, "plan_items"] + [f"{label} ({gym_min} min)"]
         out.at[idx, "free_min"] -= int(gym_min)
         placed += 1
 
@@ -307,8 +307,8 @@ with st.sidebar:
     day_window = (parse_hhmm(day_start) or time(7, 0), parse_hhmm(day_end) or time(23, 0))
 
     st.header("Trainingstijden")
-    gym_min = st.number_input("Gym sessie duur (min)", min_value=30, max_value=180, value=60, step=5)
-    chestback_min = st.number_input("Chest/Back extra op fietsdag (min)", min_value=20, max_value=120, value=45, step=5)
+    gym_min = st.number_input("Gym sessie duur (min)", min_value=30, max_value=180, value=80, step=5)
+    chestback_min = st.number_input("Chest/Back extra op fietsdag (min)", min_value=20, max_value=120, value=80, step=5)
     gym_sessions = st.number_input("Aantal gym sessies per week", min_value=1, max_value=7, value=4, step=1)
 
 st.subheader("1) Vul je werk/studie in (wisselende week)")
