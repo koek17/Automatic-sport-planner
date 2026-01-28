@@ -20,6 +20,9 @@ CITY_PRESETS = {
     "Ede": (52.249375, 5.616126),
     "custom": (None,None),
 }
+REST_OPTIONS = ["Auto (drukste dag)", "Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag",
+                        "Zondag"]
+    rest_choice = st.selectbox("Rustdag", REST_OPTIONS, index=0)
 
 #helpers
 
@@ -215,25 +218,14 @@ def build_plan(days_df, fondo_df, temp_threshold, gym_min, chestback_min, gym_se
             "Push 2",
             "Pull 2",
         ]
-    REST_OPTIONS = ["Auto (drukste dag)", "Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag",
-                        "Zondag"]
-    rest_choice = st.selectbox("Rustdag", REST_OPTIONS, index=0)
 
-if rest_choice == "Auto (drukste dag)":
-    rest_idx = out["free_min"].idxmin()
+        if rest_choice == "Auto (drukste dag)":
+            rest_idx = out["free_min"].idxmin()
 
-else:
-    day_to_idx = {
-        "Maandag": 0, 
-        "Dinsdag": 1, 
-        "Woensdag": 2, 
-        "Donderdag": 3, 
-        "Vrijdag": 4,
-        "Zaterdag": 5, 
-        "Zondag": 6
-    }
-    wanted = day_to_idx[rest_choice]
-    rest_idx= out.index[out["weekday_idx"] == wanted ][0]
+        else:
+            day_to_idx = { "Maandag": 0, "Dinsdag": 1, "Woensdag": 2, "Donderdag": 3, "Vrijdag": 4, "Zaterdag": 5, "Zondag": 6}
+            wanted = day_to_idx[rest_choice]
+            rest_idx= out.index[out["weekday_idx"] == wanted ][0]
 
 
 out.at[rest_idx, "plan_items"] = out.at[rest_idx, "plan_items"] + ["🛌 Rustdag"]
@@ -319,6 +311,10 @@ with st.sidebar:
     chestback_min = st.number_input("Chest/Back extra op fietsdag (min)", min_value=20, max_value=120, value=80, step=5)
     gym_sessions = st.number_input("Aantal gym sessies per week", min_value=1, max_value=7, value=4, step=1)
 
+REST_OPTIONS = ["Auto (drukste dag)", "Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag",
+                        "Zondag"]
+    rest_choice = st.selectbox("Rustdag", REST_OPTIONS, index=0)
+
 st.subheader("1) Vul je werk/studie in (wisselende week)")
 
 cols = st.columns(7)
@@ -352,6 +348,7 @@ for idx in range(7):
         w_e = st.text_input("Werk eind", key=end_key, placeholder="22:00")
 
         # ---- spacing ----
+        st.write("")
         st.write("")
 
         # ---- Studie ----
