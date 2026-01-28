@@ -224,14 +224,21 @@ if rest_choice == "Auto (drukste dag)":
 
 else:
     day_to_idx = {
-        "Maandag": 0, "Dinsdag": 1, "Woensdag": 2, "Donderdag": 3, "Vrijdag": 4, "Zaterdag": 5, "Zondag": 6
-        }
+        "Maandag": 0, 
+        "Dinsdag": 1, 
+        "Woensdag": 2, 
+        "Donderdag": 3, 
+        "Vrijdag": 4,
+        "Zaterdag": 5, 
+        "Zondag": 6
+    }
     wanted = day_to_idx[rest_choice]
     rest_idx= out.index[out["weekday_idx"] == wanted ][0]
 
 
 out.at[rest_idx, "plan_items"] = out.at[rest_idx, "plan_items"] + ["🛌 Rustdag"]
 out.at[rest_idx, "notes"] += "Geen fietsen (temp < drempel) → gymschema herhaalt met 1 rustdag. Rustdag gekozen op minst vrije tijd. "
+
 else:
         # normaal gedrag: gym_sessions (bijv 4) zoals jij instelt
       gym_sessions_effective = gym_sessions
